@@ -1,6 +1,4 @@
-name: US Courts Navigation
-description: Contains US Courts's menu navigation.
-package: US Courts
+name: Simplify Menu
+description: 'Adds a TwigExtension that grants access to Drupal''s menu render array so it can be used within a twig template.'
 type: module
 core: '8.x'
-package: US Courts
