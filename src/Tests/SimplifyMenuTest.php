@@ -52,7 +52,7 @@ class SimplifyMenuTest extends WebTestBase {
     // Create page.
     $page = Node::create([
       'type' => 'page',
-      'title' => 'Sharerich page',
+      'title' => 'Test page',
     ]);
     $page->save();
 

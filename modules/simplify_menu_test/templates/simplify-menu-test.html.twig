@@ -1,6 +1,8 @@
-{% set menus = ['main', 'admin'] %}
+{% set menus = ['user', main', 'admin'] %}
 
 {% for menuId in menus %}
+    <p>Menu id: {{ menuId }}</p>
+
     {# Get menu items #}
     {% set items = simplify_menu(menuId) %}
 
