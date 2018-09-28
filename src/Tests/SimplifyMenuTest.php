@@ -36,7 +36,12 @@ class SimplifyMenuTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
     ), 'Admin User', TRUE);
+  }
 
+  /**
+   * Test for Contact forms.
+   */
+  public function testTwigExtension() {
     // Create content type.
     $node_type = NodeType::create([
       'type' => 'page',
@@ -50,21 +55,16 @@ class SimplifyMenuTest extends WebTestBase {
       'title' => 'Sharerich page',
     ]);
     $page->save();
-  }
 
-  /**
-   * Test for Contact forms.
-   */
-  public function testTwigExtension() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('node');
+    $this->drupalGet('node/' . $page->id());
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
     $this->assertTrue(count($element) === 1, 'The Admin menu was rendered correctly');
 
     $this->drupalLogout();
-    $this->drupalGet('node');
+    $this->drupalGet('node/' . $page->id());
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
