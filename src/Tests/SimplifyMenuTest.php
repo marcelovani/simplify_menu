@@ -41,14 +41,14 @@ class SimplifyMenuTest extends WebTestBase {
    */
   public function testTwigExtension() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('home');
+    $this->drupalGet('node');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
     $this->assertTrue(count($element) === 1, 'The Admin menu was rendered correctly');
 
     $this->drupalLogout();
-    $this->drupalGet('home');
+    $this->drupalGet('node');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
     $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
