@@ -5,6 +5,7 @@ namespace Drupal\simplify_menu\Tests;
 use Drupal\simpletest\WebTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Tests Simplify Menu on contact pages.
@@ -36,6 +37,15 @@ class SimplifyMenuTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
     ), 'Admin User', TRUE);
+
+    // Create menu links.
+    $menu_link = MenuLinkContent::create([
+      'title' => 'Home',
+      'link' => ['uri' => '<front>'],
+      'menu_name' => 'main',
+      'expanded' => TRUE,
+    ]);
+    $menu_link->save();
   }
 
   /**
