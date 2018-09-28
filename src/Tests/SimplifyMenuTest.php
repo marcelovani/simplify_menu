@@ -44,31 +44,31 @@ class SimplifyMenuTest extends WebTestBase {
   public function testTwigExtension() {
     // Test links with anonymous user.
     $this->drupalGet('node');
-    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href="/"]');
+    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href[contains(., "/")]]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
 
-    $element = $this->xpath('//nav[@id="account"]//a[text()="Inaccessible" and @href="/"]');
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Inaccessible" and @href[contains(., "/")]]');
     $this->assertTrue(count($element) === 1, 'The Account menu is not visible');
 
-    $element = $this->xpath('//nav[@id="account"]//a[text()="Log in" and @href="/user/login"]');
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Log in" and @href[contains(., "/user/login")]]');
     $this->assertTrue(count($element) === 1, 'The Login menu is visible');
 
-    $element = $this->xpath('//nav[@id="admin"]//a[text()="Inaccessible" and @href="/"]');
+    $element = $this->xpath('//nav[@id="admin"]//a[text()="Inaccessible" and @href[contains(., "/")]]');
     $this->assertTrue(count($element) === 1, 'The Admin menu is not visible');
 
     // Test links with authenticated user.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node');
-    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href="/"]');
+    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href[contains(., "/")]]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
 
-    $element = $this->xpath('//nav[@id="account"]//a[text()="My account" and @href="/user"]');
+    $element = $this->xpath('//nav[@id="account"]//a[text()="My account" and @href[contains(., "/user")]]');
     $this->assertTrue(count($element) === 1, 'The Account menu is visible');
 
-    $element = $this->xpath('//nav[@id="account"]//a[text()="Log out" and @href="/user/logout"]');
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Log out" and @href[contains(., "/user/logout")]]');
     $this->assertTrue(count($element) === 1, 'The Login menu is visible');
 
-    $element = $this->xpath('//nav[@id="admin"]//a[text()="Administration" and @href="/admin"]');
+    $element = $this->xpath('//nav[@id="admin"]//a[text()="Administration" and @href[contains(., "/admin")]]');
     $this->assertTrue(count($element) === 1, 'The Admin menu was rendered correctly');
 
   }
