@@ -47,14 +47,17 @@ class SimplifyMenuTest extends WebTestBase {
     $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href[contains(., "/")]]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
 
-    $element = $this->xpath('//nav[@id="account"]//a[text()="Inaccessible" and @href[contains(., "/")]]');
-    $this->assertTrue(count($element) === 1, 'The Account menu is not visible');
+    $element = $this->xpath('//nav[@id="account"]//a[text()="My account"]');
+    $this->assertTrue(count($element) === 0, 'The Account menu is not visible');
 
     $element = $this->xpath('//nav[@id="account"]//a[text()="Log in" and @href[contains(., "/user/login")]]');
     $this->assertTrue(count($element) === 1, 'The Login menu is visible');
 
-    $element = $this->xpath('//nav[@id="admin"]//a[text()="Inaccessible" and @href[contains(., "/")]]');
-    $this->assertTrue(count($element) === 1, 'The Admin menu is not visible');
+    $element = $this->xpath('//nav[@id="admin"]//a[text()="Administration"]');
+    $this->assertTrue(count($element) === 0, 'The Admin menu is not visible');
+
+    $element = $this->xpath('//a[text()="Inaccessible"//a[text()="Administration"]');
+    $this->assertTrue(count($element) === 0, 'The text Inaccessible should not be on the links');
 
     // Test links with authenticated user.
     $this->drupalLogin($this->adminUser);
