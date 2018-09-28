@@ -4,6 +4,7 @@ namespace Drupal\simplify_menu;
 
 use Drupal\Core\Menu\MenuLinkTree;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Access\AccessResultInterface;
 
 /**
  * Class MenuItems.
@@ -50,6 +51,28 @@ class MenuItems {
   protected function simplifyLinks(array $links, $submenuKey = 'submenu') {
     $result = [];
     foreach ($links as $item) {
+      // Per DefaultMenuLinkTreeManipulators::checkAccess(), which we run in
+      // getMenuTree, "inaccessible links are *not* removed; it's up to the code
+      // doing something with the tree to exclude inaccessible links, just like
+      // MenuLinkTree::build() does" - whose code we replicate here.
+
+      /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
+      $link = $item->link;
+      // Generally we only deal with visible links, but just in case.
+      if (!$link->isEnabled()) {
+        continue;
+      }
+
+      if ($item->access !== NULL && !$item->access instanceof AccessResultInterface) {
+        throw new \DomainException('MenuLinkTreeElement::access must be either NULL or an AccessResultInterface object.');
+      }
+
+      // Only render accessible links.
+      if ($item->access instanceof AccessResultInterface && !$item->access->isAllowed()) {
+        continue;
+      }
+
+      // Build the link item.
       $simplifiedLink = [
         'text' => $item->link->getTitle(),
         'url' => $item->link->getUrlObject()->toString(),
