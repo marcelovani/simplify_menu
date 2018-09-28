@@ -3,9 +3,6 @@
 namespace Drupal\simplify_menu\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Tests Simplify Menu on contact pages.
@@ -13,6 +10,8 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  * @group simplify_menu
  */
 class SimplifyMenuTest extends WebTestBase {
+
+  protected $profile = 'standard';
 
   /**
    * Authenticated adminUser
@@ -37,48 +36,41 @@ class SimplifyMenuTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
     ), 'Admin User', TRUE);
-
-    // Create menu links.
-    $menu_link = MenuLinkContent::create([
-      'title' => 'Home',
-      'link' => ['uri' => '<front>'],
-      'menu_name' => 'main',
-      'expanded' => TRUE,
-    ]);
-    $menu_link->save();
   }
 
   /**
    * Test for Contact forms.
    */
   public function testTwigExtension() {
-    // Create content type.
-    $node_type = NodeType::create([
-      'type' => 'page',
-      'name' => 'Basic page',
-    ]);
-    $node_type->save();
-
-    // Create page.
-    $page = Node::create([
-      'type' => 'page',
-      'title' => 'Test page',
-    ]);
-    $page->save();
-
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('node/' . $page->id());
-    $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
+    // Test links with anonymous user.
+    $this->drupalGet('node');
+    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href="/"]');
     $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
-    $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
+
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Inaccessible" and @href="/"]');
+    $this->assertTrue(count($element) === 1, 'The Account menu is not visible');
+
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Log in" and @href="/user/login"]');
+    $this->assertTrue(count($element) === 1, 'The Login menu is visible');
+
+    $element = $this->xpath('//nav[@id="admin"]//a[text()="Inaccessible" and @href="/"]');
+    $this->assertTrue(count($element) === 1, 'The Admin menu is not visible');
+
+    // Test links with authenticated user.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('node');
+    $element = $this->xpath('//nav[@id="main"]//a[text()="Home" and @href="/"]');
+    $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
+
+    $element = $this->xpath('//nav[@id="account"]//a[text()="My account" and @href="/user"]');
+    $this->assertTrue(count($element) === 1, 'The Account menu is visible');
+
+    $element = $this->xpath('//nav[@id="account"]//a[text()="Log out" and @href="/user/logout"]');
+    $this->assertTrue(count($element) === 1, 'The Login menu is visible');
+
+    $element = $this->xpath('//nav[@id="admin"]//a[text()="Administration" and @href="/admin"]');
     $this->assertTrue(count($element) === 1, 'The Admin menu was rendered correctly');
 
-    $this->drupalLogout();
-    $this->drupalGet('node/' . $page->id());
-    $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/"]');
-    $this->assertTrue(count($element) === 1, 'The Main menu was rendered correctly');
-    $element = $this->xpath('//span[@id="simplify-menu-test"]//a[@href="/admin"]');
-    $this->assertTrue(count($element) === 0, 'The Admin menu is not visible');
   }
 
   /**
