@@ -3,6 +3,8 @@
 namespace Drupal\simplify_menu\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests Simplify Menu on contact pages.
@@ -23,7 +25,7 @@ class SimplifyMenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['simplify_menu', 'simplify_menu_test'];
+  public static $modules = ['node', 'simplify_menu', 'simplify_menu_test'];
 
   /**
    * Setup.
@@ -34,6 +36,20 @@ class SimplifyMenuTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
     ), 'Admin User', TRUE);
+
+    // Create content type.
+    $node_type = NodeType::create([
+      'type' => 'page',
+      'name' => 'Basic page',
+    ]);
+    $node_type->save();
+
+    // Create page.
+    $page = Node::create([
+      'type' => 'page',
+      'title' => 'Sharerich page',
+    ]);
+    $page->save();
   }
 
   /**
