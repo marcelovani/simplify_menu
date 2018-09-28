@@ -56,7 +56,7 @@ class SimplifyMenuTest extends WebTestBase {
     $element = $this->xpath('//nav[@id="admin"]//a[text()="Administration"]');
     $this->assertTrue(count($element) === 0, 'The Admin menu is not visible');
 
-    $element = $this->xpath('//a[text()="Inaccessible"//a[text()="Administration"]');
+    $element = $this->xpath('//a[text()="Inaccessible"]');
     $this->assertTrue(count($element) === 0, 'The text Inaccessible should not be on the links');
 
     // Test links with authenticated user.
